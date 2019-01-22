@@ -10,6 +10,13 @@ using Lucene.Net.Util;
 
 namespace LuceneNet48Demo
 {
+	/// <summary>
+	/// better English search
+	/// </summary>
+	/// <remarks>
+	/// http://programagic.ca/blog/rest-api-lucenenet-part-2-a-few-tricks-and-tips
+	/// My friends are visiting Montréal's engineering institutions -> my friend visit montreal engin institut
+	/// </remarks>
 	public class EnhancedEnglishAnalyzer : StopwordAnalyzerBase
 	{
 		public EnhancedEnglishAnalyzer(LuceneVersion matchVersion, CharArraySet stopwords) : base(matchVersion, stopwords) { }

@@ -7,29 +7,10 @@ using Lucene.Net.QueryParsers.Classic;
 using Lucene.Net.Search;
 using Lucene.Net.Store;
 using Lucene.Net.Util;
+using LuceneNet48Demo.DO;
 
 namespace LuceneNet48Demo
 {
-	/// <summary>
-	/// results after executing a search on the movie index
-	/// </summary>
-	public class SearchResults
-	{
-		public string Time { get; set; }
-		public int TotalHits { get; set; }
-		public IList<MovieHit> Hits { get; set; }
-		public SearchResults() => Hits = new List<MovieHit>();
-	}
-
-	/// <summary>
-	/// a representation of a movie item
-	/// </summary>
-	public class MovieHit : Movie
-	{
-		public new int? Year { get; set; }
-		public float Score { get; set; }
-	}
-
 	/// <summary>
 	/// lucene.net based search
 	/// </summary>
@@ -45,10 +26,7 @@ namespace LuceneNet48Demo
 		public MySearch(string indexPath)
 		{
 			_analyzer = new EnhancedEnglishAnalyzer(MATCH_LUCENE_VERSION, EnglishAnalyzer.DefaultStopSet);
-			_writer = new IndexWriter(FSDirectory.Open(indexPath), new IndexWriterConfig(MATCH_LUCENE_VERSION, _analyzer)
-			{
-				OpenMode = OpenMode.CREATE
-			});
+			_writer = new IndexWriter(FSDirectory.Open(indexPath), new IndexWriterConfig(MATCH_LUCENE_VERSION, _analyzer));
 
 			_searchManager = new SearcherManager(_writer, true, null);
 			_queryParser = new AliasMultiFieldQueryParser(MATCH_LUCENE_VERSION, null, _analyzer,
@@ -59,35 +37,42 @@ namespace LuceneNet48Demo
 				});
 		}
 
+		/// <summary>
+		/// create index
+		/// </summary>
 		public void Index()
 		{
+			const string keyField = "id";
+
 			foreach (var movie in MovieDatabase.Database)
 			{
-				_writer.UpdateDocument(new Term("url", $"http://movies.com/{movie.Title.Replace(" ", "-")}"), GetDocument(movie));
+				// prapare new document
+				var doc = new Document
+				{
+					new StringField(keyField, $"{movie.Id}", Field.Store.YES),
+					new TextField("title", movie.Title, Field.Store.YES),
+					new TextField("summary", movie.Summary, Field.Store.YES),
+					new StringField("genre", movie.Genre, Field.Store.YES),
+					new Int32Field("year", movie.Year, Field.Store.YES),
+				};
+				foreach (var actor in movie.Actors)
+				{
+					doc.Add(new TextField("actor", actor, Field.Store.YES));
+				}
+
+				// https://stackoverflow.com/questions/26094224/lucene-net-update-data
+				// Where in Term constructor field "ID" is my unique field with no index flag and Value
+				// is text of old value field "ID" in old document in index.
+				_writer.UpdateDocument(new Term(keyField, doc.GetField(keyField).GetStringValue()), doc);
 			}
 
 			_writer.Flush(true, true);
 			_writer.Commit();
 		}
 
-		private Document GetDocument(Movie movie)
-		{
-			var document = new Document
-			{
-				new TextField("title", movie.Title, Field.Store.YES),
-				new TextField("summary", movie.Summary, Field.Store.YES),
-				new StringField("genre", movie.Genre, Field.Store.YES),
-				new Int32Field("year", movie.Year, Field.Store.YES),
-			};
-
-			foreach (var actor in movie.Actors)
-			{
-				document.Add(new TextField("actor", actor, Field.Store.YES));
-			}
-
-			return document;
-		}
-
+		/// <summary>
+		/// search index
+		/// </summary>
 		public SearchResults Search(string query)
 		{
 			// Execute the search with a fresh indexSearcher
@@ -111,6 +96,7 @@ namespace LuceneNet48Demo
 
 					var hit = new MovieHit
 					{
+						Id = int.Parse(document.GetField("id")?.GetStringValue()),
 						Title = document.GetField("title")?.GetStringValue(),
 						Summary = document.GetField("summary")?.GetStringValue(),
 						Genre = document.GetField("genre")?.GetStringValue(),
@@ -119,6 +105,7 @@ namespace LuceneNet48Demo
 						// Results are automatically sorted by relevance
 						Score = scoreDoc.Score,
 					};
+
 					result.Hits.Add(hit);
 				}
 

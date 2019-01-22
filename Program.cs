@@ -20,8 +20,9 @@ namespace LuceneNet48Demo
 			Console.WriteLine($"Query: '{query}' in {result.Time}, total: {result.TotalHits}");
 			foreach (var item in result.Hits)
 			{
-				Console.WriteLine($"{item.Title} ({item.Year})");
+				Console.WriteLine($"#{item.Id}: {item.Title} ({item.Year}) {item.Score}");
 			}
+			Console.ReadKey();
 		}
 	}
 }
