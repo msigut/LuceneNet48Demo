@@ -7,6 +7,7 @@ namespace LuceneNet48Demo.DO
 	/// </summary>
 	public class SearchResults
 	{
+		public string Query { get; set; }
 		public string Time { get; set; }
 		public int TotalHits { get; set; }
 		public IList<MovieHit> Hits { get; set; }

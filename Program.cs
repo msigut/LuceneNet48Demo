@@ -7,17 +7,16 @@ namespace LuceneNet48Demo
 	{
 		static void Main(string[] args)
 		{
-			var query = "t:term s:cyborg";
 			var search = new MySearch(Path.Combine(Environment.CurrentDirectory, "index"));
 
 			// 1. index first
 			search.Index();
 
-			// 2. search
-			var result = search.Search(query);
+			// 2. search (query: title:term summary:cyborg)
+			var result = search.Search("t:term s:cyborg");
 
 			// 3. show results
-			Console.WriteLine($"Query: '{query}' in {result.Time}, total: {result.TotalHits}");
+			Console.WriteLine($"Query: '{result.Query}' in {result.Time}, total: {result.TotalHits}");
 			foreach (var item in result.Hits)
 			{
 				Console.WriteLine($"#{item.Id}: {item.Title} ({item.Year}) {item.Score}");

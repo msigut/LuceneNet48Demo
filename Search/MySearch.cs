@@ -29,6 +29,8 @@ namespace LuceneNet48Demo
 			_writer = new IndexWriter(FSDirectory.Open(indexPath), new IndexWriterConfig(MATCH_LUCENE_VERSION, _analyzer));
 
 			_searchManager = new SearcherManager(_writer, true, null);
+
+			// make alias for fields: "t" -> "title"; "s" -> "summary"
 			_queryParser = new AliasMultiFieldQueryParser(MATCH_LUCENE_VERSION, null, _analyzer,
 				new Dictionary<string, string>()
 				{
@@ -87,7 +89,8 @@ namespace LuceneNet48Demo
 
 				var result = new SearchResults()
 				{
-					TotalHits = topdDocs.TotalHits
+					Query = query,
+					TotalHits = topdDocs.TotalHits,
 				};
 
 				foreach (var scoreDoc in topdDocs.ScoreDocs)

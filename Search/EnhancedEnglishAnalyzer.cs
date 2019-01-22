@@ -11,7 +11,7 @@ using Lucene.Net.Util;
 namespace LuceneNet48Demo
 {
 	/// <summary>
-	/// better English search
+	/// Enhanced English Lucene analyzer
 	/// </summary>
 	/// <remarks>
 	/// http://programagic.ca/blog/rest-api-lucenenet-part-2-a-few-tricks-and-tips
