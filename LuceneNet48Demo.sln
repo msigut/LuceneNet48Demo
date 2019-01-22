@@ -3,7 +3,14 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.28307.271
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LuceneNet48Demo", "LuceneNet48Demo.csproj", "{1C1EC7B1-7D30-4E8F-BB83-A1426EEC32F7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LuceneNet48Demo", "src\LuceneNet48Demo\LuceneNet48Demo.csproj", "{1C1EC7B1-7D30-4E8F-BB83-A1426EEC32F7}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{203C8D75-ACB2-4329-B923-483F87D23977}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+		.gitignore = .gitignore
+		README.md = README.md
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

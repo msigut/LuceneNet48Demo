@@ -21,7 +21,9 @@ namespace LuceneNet48Demo
 			{
 				Console.WriteLine($"#{item.Id}: {item.Title} ({item.Year}) {item.Score}");
 			}
-			Console.ReadKey();
+
+			// 4. work on index ...
+			search.WorkOnIndex();
 		}
 	}
 }

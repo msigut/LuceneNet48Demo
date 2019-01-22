@@ -120,5 +120,19 @@ namespace LuceneNet48Demo
 				searcher = null;
 			}
 		}
+
+		/// <summary>
+		/// reading index document by document
+		/// </summary>
+		public void WorkOnIndex()
+		{
+			var reader = _writer.GetReader(true);
+
+			for (var x = 0; x < reader.NumDocs; x++)
+			{
+				var doc = reader.Document(x);
+				// do something ...
+			}
+		}
 	}
 }
