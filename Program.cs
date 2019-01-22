@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 
 namespace LuceneNet48Demo
@@ -7,7 +7,7 @@ namespace LuceneNet48Demo
 	{
 		static void Main(string[] args)
 		{
-			var query = "term";
+			var query = "t:term s:cyborg";
 			var search = new MySearch(Path.Combine(Environment.CurrentDirectory, "index"));
 
 			// 1. index first

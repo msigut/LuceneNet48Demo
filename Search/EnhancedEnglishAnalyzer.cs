@@ -24,7 +24,7 @@ namespace LuceneNet48Demo
 			result = new LowerCaseFilter(m_matchVersion, result);
 			result = new StopFilter(m_matchVersion, result, m_stopwords);
 			result = new PorterStemFilter(result);
-			result = new EdgeNGramTokenFilter(m_matchVersion, result, 3, 10);
+			result = new EdgeNGramTokenFilter(m_matchVersion, result, 3, 8);
 			return new TokenStreamComponents(source, result);
 		}
 	}

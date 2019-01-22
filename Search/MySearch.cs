@@ -30,6 +30,9 @@ namespace LuceneNet48Demo
 		public float Score { get; set; }
 	}
 
+	/// <summary>
+	/// lucene.net based search
+	/// </summary>
 	public class MySearch
 	{
 		private const LuceneVersion MATCH_LUCENE_VERSION = LuceneVersion.LUCENE_48;
@@ -44,11 +47,16 @@ namespace LuceneNet48Demo
 			_analyzer = new EnhancedEnglishAnalyzer(MATCH_LUCENE_VERSION, EnglishAnalyzer.DefaultStopSet);
 			_writer = new IndexWriter(FSDirectory.Open(indexPath), new IndexWriterConfig(MATCH_LUCENE_VERSION, _analyzer)
 			{
-				OpenMode = OpenMode.CREATE_OR_APPEND
+				OpenMode = OpenMode.CREATE
 			});
 
 			_searchManager = new SearcherManager(_writer, true, null);
-			_queryParser = new MultiFieldQueryParser(MATCH_LUCENE_VERSION, new[] { "title", "summary" }, _analyzer);
+			_queryParser = new AliasMultiFieldQueryParser(MATCH_LUCENE_VERSION, null, _analyzer,
+				new Dictionary<string, string>()
+				{
+					{ "t", "title" },
+					{ "s", "summary" }
+				});
 		}
 
 		public void Index()
@@ -62,9 +70,6 @@ namespace LuceneNet48Demo
 			_writer.Commit();
 		}
 
-		/// <summary>
-		/// creates a Lucene document for the provided movie
-		/// </summary>
 		private Document GetDocument(Movie movie)
 		{
 			var document = new Document
