@@ -10,6 +10,9 @@ namespace LuceneNet48Demo
 	/// <summary>
 	/// Multifield query parser with alias support
 	/// </summary>
+	/// <remarks>
+	/// Coding style from Lucene.NET project
+	/// </remarks>
 	public class AliasMultiFieldQueryParser : MultiFieldQueryParser
 	{
 		protected IDictionary<string, string> m_aliases;
@@ -65,7 +68,7 @@ namespace LuceneNet48Demo
 		/// <summary>
 		/// get alias for field
 		/// </summary>
-		private string GetAlias(string field)
+		protected string GetAlias(string field)
 		{
 			if (string.IsNullOrEmpty(field))
 				throw new ArgumentException(nameof(field));
