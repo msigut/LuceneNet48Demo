@@ -7,7 +7,7 @@ What's inside:
 * [AliasMultiFieldQueryParser](/Search/AliasMultiFieldQueryParser.cs) - Multifield query parser with alias support
 ```c#
 // make alias for fields: "t" -> "title"; "s" -> "summary"
-_queryParser = new AliasMultiFieldQueryParser(MATCH_LUCENE_VERSION, null, _analyzer,
+_queryParser = new AliasMultiFieldQueryParser(MATCH_LUCENE_VERSION, new[] { "title", "sumary" }, _analyzer,
 	new Dictionary<string, string>()
 	{
 		{ "t", "title" },
@@ -26,6 +26,7 @@ Tokens from analyzers: friend visit montreal engin institut
 ```
 * using **SearcherManager** + `MaybeRefreshBlocking()`, `Acquire()` and `Release()`
 * using **UpdateDocument()** + `new Term(keyField, ...)` (based on article: [Lucene .NET Update data](https://stackoverflow.com/questions/26094224/lucene-net-update-data))
+* using **DeleteDocuments** + `MaybeRefreshBlocking()` + `new Term(keyField, ...)` (for solving issue: [C# Lucene.Net IndexWriter.DeleteDocuments not working](https://stackoverflow.com/questions/44181550/c-sharp-lucene-net-indexwriter-deletedocuments-not-working/54336227#54336227)
 * use example data **MovieDatabase** + `int Id` (based on code: [r15h1/lucenedemo](https://github.com/r15h1/lucenedemo))
 
 Packages:
