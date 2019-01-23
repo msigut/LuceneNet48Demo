@@ -13,10 +13,11 @@ namespace LuceneNet48Demo
 			search.Index();
 
 			// 2. search (query: title:term summary:cyborg)
-			var result = search.Search("t:term s:cyborg");
+			//var result = search.Search("t:term s:cyborg");
+			var result = search.Search("term");
 
 			// 3. show results
-			Console.WriteLine($"Query: '{result.Query}' in {result.Time}, total: {result.TotalHits}");
+			Console.WriteLine($"Query: '{result.Query}' total: {result.TotalHits}");
 			foreach (var item in result.Hits)
 			{
 				Console.WriteLine($"#{item.Id}: {item.Title} ({item.Year}) {item.Score}");

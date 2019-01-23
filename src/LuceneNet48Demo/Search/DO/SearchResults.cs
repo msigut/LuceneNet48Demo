@@ -8,9 +8,9 @@ namespace LuceneNet48Demo.DO
 	public class SearchResults
 	{
 		public string Query { get; set; }
-		public string Time { get; set; }
 		public int TotalHits { get; set; }
 		public IList<MovieHit> Hits { get; set; }
+
 		public SearchResults() => Hits = new List<MovieHit>();
 	}
 }

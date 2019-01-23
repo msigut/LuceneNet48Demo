@@ -20,12 +20,12 @@ namespace LuceneNet48Demo
 		#region Constructor
 
 		public AliasMultiFieldQueryParser(LuceneVersion matchVersion, string[] fields, Analyzer analyzer, IDictionary<string, string> aliases, IDictionary<string, float> boosts)
-		  : base(matchVersion, fields, analyzer)
+		  : base(matchVersion, fields, analyzer, boosts)
 		{
 			this.m_aliases = aliases;
 		}
 		public AliasMultiFieldQueryParser(LuceneVersion matchVersion, string[] fields, Analyzer analyzer, IDictionary<string, string> aliases)
-		 : base(matchVersion, null, analyzer)
+		 : base(matchVersion, fields, analyzer)
 		{
 			this.m_aliases = aliases;
 		}
@@ -71,9 +71,9 @@ namespace LuceneNet48Demo
 		protected string GetAlias(string field)
 		{
 			if (string.IsNullOrEmpty(field))
-				throw new ArgumentException(nameof(field));
+				return field;
 
-			if (m_aliases.ContainsKey(field))
+			if (m_aliases != null && m_aliases.ContainsKey(field))
 			{
 				return m_aliases[field];
 			}

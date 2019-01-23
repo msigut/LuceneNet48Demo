@@ -31,7 +31,7 @@ namespace LuceneNet48Demo
 			_searchManager = new SearcherManager(_writer, true, null);
 
 			// make alias for fields: "t" -> "title"; "s" -> "summary"
-			_queryParser = new AliasMultiFieldQueryParser(MATCH_LUCENE_VERSION, null, _analyzer,
+			_queryParser = new AliasMultiFieldQueryParser(MATCH_LUCENE_VERSION, new[] { "title", "sumary" }, _analyzer,
 				new Dictionary<string, string>()
 				{
 					{ "t", "title" },
@@ -85,15 +85,15 @@ namespace LuceneNet48Demo
 			{
 				var q = _queryParser.Parse(query);
 
-				var topdDocs = searcher.Search(q, 10);
+				var topDocs = searcher.Search(q, 10);
 
 				var result = new SearchResults()
 				{
 					Query = query,
-					TotalHits = topdDocs.TotalHits,
+					TotalHits = topDocs.TotalHits,
 				};
 
-				foreach (var scoreDoc in topdDocs.ScoreDocs)
+				foreach (var scoreDoc in topDocs.ScoreDocs)
 				{
 					var document = searcher.Doc(scoreDoc.Doc);
 
