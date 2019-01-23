@@ -68,6 +68,10 @@ namespace LuceneNet48Demo
 				_writer.UpdateDocument(new Term(keyField, doc.GetField(keyField).GetStringValue()), doc);
 			}
 
+			// https://stackoverflow.com/questions/44181550/c-sharp-lucene-net-indexwriter-deletedocuments-not-working/54336227#54336227
+			// Delete last movie, check DeleteDocuments() principle
+			_writer.DeleteDocuments(new Term(keyField, "7"));
+			
 			_writer.Flush(true, true);
 			_writer.Commit();
 		}
