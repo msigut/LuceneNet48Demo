@@ -4,7 +4,7 @@ A demo of using [Apache Lucene.NET 4.8](https://github.com/apache/lucenenet) for
 
 What's inside:
 
-* [AliasMultiFieldQueryParser](/Search/AliasMultiFieldQueryParser.cs) - Multifield query parser with alias support
+* [AliasMultiFieldQueryParser](/src/LuceneNet48Demo/Search/AliasMultiFieldQueryParser.cs) - Multifield query parser with alias support
 ```c#
 // make alias for fields: "t" -> "title"; "s" -> "summary"
 _queryParser = new AliasMultiFieldQueryParser(MATCH_LUCENE_VERSION, new[] { "title", "sumary" }, _analyzer,
@@ -17,7 +17,7 @@ _queryParser = new AliasMultiFieldQueryParser(MATCH_LUCENE_VERSION, new[] { "tit
 // (query: title:term summary:cyborg)
 result = search.Search("t:term s:cyborg");
 ```
-* [EnhEnglishAnalyzer](/Search/EnhEnglishAnalyzer.cs) - Enhanced English Lucene analyzer (based on article: [Tuning Lucene to Get the Most Relevant Results](https://blog.swwomm.com/2013/07/tuning-lucene-to-get-most-relevant.html) and [Search with Lucene.Net 4.8 (Part 2) - A Few Tricks and Tips](http://programagic.ca/blog/rest-api-lucenenet-part-2-a-few-tricks-and-tips))
+* [EnhEnglishAnalyzer](/src/LuceneNet48Demo/Search/EnhEnglishAnalyzer.cs) - Enhanced English Lucene analyzer (based on article: [Tuning Lucene to Get the Most Relevant Results](https://blog.swwomm.com/2013/07/tuning-lucene-to-get-most-relevant.html) and [Search with Lucene.Net 4.8 (Part 2) - A Few Tricks and Tips](http://programagic.ca/blog/rest-api-lucenenet-part-2-a-few-tricks-and-tips))
 
 ```
 Original text: My friends are visiting Montréal's engineering institutions
