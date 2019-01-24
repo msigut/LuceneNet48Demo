@@ -2,7 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using Lucene.Net.Analysis;
+using Lucene.Net.Analysis.Core;
 using Lucene.Net.Analysis.En;
+using Lucene.Net.Analysis.Miscellaneous;
 using Lucene.Net.Analysis.TokenAttributes;
 using Lucene.Net.Documents;
 using Lucene.Net.Index;
@@ -28,8 +30,25 @@ namespace LuceneNet48Demo
 
 		public MySearch(string indexPath)
 		{
-			_analyzer = new EnhEnglishAnalyzer(MATCH_LUCENE_VERSION);
-			_writer = new IndexWriter(FSDirectory.Open(indexPath), new IndexWriterConfig(MATCH_LUCENE_VERSION, _analyzer));
+			//_analyzer = new EnhEnglishAnalyzer(MATCH_LUCENE_VERSION);
+
+			_analyzer = new MultiFieldAnalyzerWrapper(
+				defaultAnalyzer: new EnhEnglishAnalyzer(MATCH_LUCENE_VERSION, true),
+				new[]
+				{
+					(
+						new[] { "genre", "year" },
+						Analyzer.NewAnonymous(createComponents: (fieldName, reader) =>
+						{
+							var source = new KeywordTokenizer(reader);
+							TokenStream result = new ASCIIFoldingFilter(source);
+							result = new LowerCaseFilter(MATCH_LUCENE_VERSION, result);
+							return new TokenStreamComponents(source, result);
+						})
+					)
+				});
+
+		_writer = new IndexWriter(FSDirectory.Open(indexPath), new IndexWriterConfig(MATCH_LUCENE_VERSION, _analyzer));
 
 			_searchManager = new SearcherManager(_writer, true, null);
 

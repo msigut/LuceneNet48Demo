@@ -24,6 +24,27 @@ Original text: My friends are visiting Montréal's engineering institutions
 ->
 Tokens from analyzers: friend visit montreal engin institut
 ```
+
+* [MultiFieldAnalyzerWrapper](/src/LuceneNet48Demo/Search/MultiFieldAnalyzerWrapper.cs) - For assign multiple **fields** to Analyzer + one as **default** for all other fields
+```c#
+_analyzer = new MultiFieldAnalyzerWrapper(
+	defaultAnalyzer: new EnhEnglishAnalyzer(MATCH_LUCENE_VERSION, true),
+	new[]
+	{
+		(
+			// analyzer for fields: "genre", "year"
+			new[] { "genre", "year" },
+			Analyzer.NewAnonymous(createComponents: (fieldName, reader) =>
+			{
+				var source = new KeywordTokenizer(reader);
+				TokenStream result = new ASCIIFoldingFilter(source);
+				result = new LowerCaseFilter(MATCH_LUCENE_VERSION, result);
+				return new TokenStreamComponents(source, result);
+			})
+		)
+	});
+```
+
 * using **SearcherManager** + `MaybeRefreshBlocking()`, `Acquire()` and `Release()`
 * using **UpdateDocument()** + `new Term(keyField, ...)` (based on article: [Lucene .NET Update data](https://stackoverflow.com/questions/26094224/lucene-net-update-data))
 * using **DeleteDocuments** + `MaybeRefreshBlocking()` + `new Term(keyField, ...)` (for solving issue: [C# Lucene.Net IndexWriter.DeleteDocuments not working](https://stackoverflow.com/questions/44181550/c-sharp-lucene-net-indexwriter-deletedocuments-not-working/54336227#54336227)
