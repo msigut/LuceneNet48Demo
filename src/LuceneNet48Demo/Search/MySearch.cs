@@ -1,6 +1,9 @@
+using System;
 using System.Collections.Generic;
+using System.Text;
 using Lucene.Net.Analysis;
 using Lucene.Net.Analysis.En;
+using Lucene.Net.Analysis.TokenAttributes;
 using Lucene.Net.Documents;
 using Lucene.Net.Index;
 using Lucene.Net.QueryParsers.Classic;
@@ -25,7 +28,7 @@ namespace LuceneNet48Demo
 
 		public MySearch(string indexPath)
 		{
-			_analyzer = new EnhancedEnglishAnalyzer(MATCH_LUCENE_VERSION, EnglishAnalyzer.DefaultStopSet);
+			_analyzer = new EnhEnglishAnalyzer(MATCH_LUCENE_VERSION);
 			_writer = new IndexWriter(FSDirectory.Open(indexPath), new IndexWriterConfig(MATCH_LUCENE_VERSION, _analyzer));
 
 			_searchManager = new SearcherManager(_writer, true, null);
@@ -66,6 +69,10 @@ namespace LuceneNet48Demo
 				// Where in Term constructor field "ID" is my unique field with no index flag and Value
 				// is text of old value field "ID" in old document in index.
 				_writer.UpdateDocument(new Term(keyField, doc.GetField(keyField).GetStringValue()), doc);
+
+				// for debug Analyzer work use this ...
+				// 
+				PrintTokens(_writer.Analyzer, "title", movie.Title);
 			}
 
 			// https://stackoverflow.com/questions/44181550/c-sharp-lucene-net-indexwriter-deletedocuments-not-working/54336227#54336227
@@ -137,6 +144,33 @@ namespace LuceneNet48Demo
 				var doc = reader.Document(x);
 				// do something ...
 			}
+		}
+
+		/// <summary>
+		/// print tokens after field analyze
+		/// </summary>
+		protected void PrintTokens(Analyzer analyzer, string fieldName, string text)
+		{
+			if (analyzer == null)
+				throw new ArgumentNullException(nameof(analyzer));
+
+			var tokenStream = analyzer.GetTokenStream(fieldName, text);
+			var termAttr = tokenStream.GetAttribute<ICharTermAttribute>();
+
+			tokenStream.Reset();
+
+			var str = new StringBuilder();
+			while (tokenStream.IncrementToken())
+			{
+				if (str.Length > 0)
+				{
+					str.Append(" ");
+				}
+				str.Append(termAttr.ToString());
+			}
+			Console.WriteLine($"field: {fieldName} '{text}' -> '{str.ToString()}'");
+
+			tokenStream.Reset();
 		}
 	}
 }
