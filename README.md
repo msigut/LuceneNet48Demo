@@ -45,6 +45,16 @@ _analyzer = new MultiFieldAnalyzerWrapper(
 	});
 ```
 
+* [ForEachTermDocs](/src/LuceneNet48Demo/Search/Extensions.cs) - For get documents by **Term**, only selected **fields** to work with
+```c#
+// II. use term & selected fields
+_writer.ForEachTermDocs(new Term("year", "1194"), new[] { "title" }, d =>
+ {
+	 var title = d.GetField("title").GetStringValue();
+	 // do something ...
+ });
+```
+
 * using **SearcherManager** + `MaybeRefreshBlocking()`, `Acquire()` and `Release()`
 * using **UpdateDocument()** + `new Term(keyField, ...)` (based on article: [Lucene .NET Update data](https://stackoverflow.com/questions/26094224/lucene-net-update-data))
 * using **DeleteDocuments** + `MaybeRefreshBlocking()` + `new Term(keyField, ...)` (for solving issue: [C# Lucene.Net IndexWriter.DeleteDocuments not working](https://stackoverflow.com/questions/44181550/c-sharp-lucene-net-indexwriter-deletedocuments-not-working/54336227#54336227)
