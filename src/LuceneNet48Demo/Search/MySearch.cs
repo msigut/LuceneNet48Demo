@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Text;
 using Lucene.Net.Analysis;
 using Lucene.Net.Analysis.Core;
-using Lucene.Net.Analysis.En;
 using Lucene.Net.Analysis.Miscellaneous;
 using Lucene.Net.Analysis.TokenAttributes;
 using Lucene.Net.Documents;
@@ -48,7 +47,7 @@ namespace LuceneNet48Demo
 					)
 				});
 
-		_writer = new IndexWriter(FSDirectory.Open(indexPath), new IndexWriterConfig(MATCH_LUCENE_VERSION, _analyzer));
+			_writer = new IndexWriter(FSDirectory.Open(indexPath), new IndexWriterConfig(MATCH_LUCENE_VERSION, _analyzer));
 
 			_searchManager = new SearcherManager(_writer, true, null);
 
@@ -90,14 +89,13 @@ namespace LuceneNet48Demo
 				_writer.UpdateDocument(new Term(keyField, doc.GetField(keyField).GetStringValue()), doc);
 
 				// for debug Analyzer work use this ...
-				// 
 				PrintTokens(_writer.Analyzer, "title", movie.Title);
 			}
 
 			// https://stackoverflow.com/questions/44181550/c-sharp-lucene-net-indexwriter-deletedocuments-not-working/54336227#54336227
 			// Delete last movie, check DeleteDocuments() principle
 			_writer.DeleteDocuments(new Term(keyField, "7"));
-			
+
 			_writer.Flush(true, true);
 			_writer.Commit();
 		}
@@ -156,6 +154,7 @@ namespace LuceneNet48Demo
 		/// </summary>
 		public void WorkOnIndex()
 		{
+			// I. do by Document Id
 			var reader = _writer.GetReader(true);
 
 			for (var x = 0; x < reader.NumDocs; x++)
@@ -163,6 +162,13 @@ namespace LuceneNet48Demo
 				var doc = reader.Document(x);
 				// do something ...
 			}
+
+			// II. use term & selected fields
+			_writer.ForEachTermDocs(new Term("year", "1194"), new[] { "title" }, d =>
+			 {
+				 var title = d.GetField("title").GetStringValue();
+				 // do something ...
+			 });
 		}
 
 		/// <summary>
